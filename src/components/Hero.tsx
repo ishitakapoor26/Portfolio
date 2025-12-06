@@ -1,21 +1,53 @@
-export default function Hero(){
-  return (
-    <section className="bg-[url('/hero-bg.jpg')] bg-cover bg-center py-36">
-      <div className="container text-center">
-        <h1 className="h1 text-5xl md:text-6xl font-extrabold leading-tight mb-6">Ishita Kapoor</h1>
-        <p className="text-xl max-w-3xl mx-auto mb-8">Emerging leader · Founder · Strategic advisor helping early-stage founders and organizations scale impact through leadership, inclusive design, and product strategy.</p>
-        <div className="flex justify-center gap-4">
-          <a href="/contact" className="btn btn-primary">Book a Call</a>
-          <a href="/media" className="btn btn-outline">View Media</a>
-        </div>
+"use client";
 
-        <div className="mt-10 flex items-center justify-center gap-6 text-sm text-gray-600">
-          <span>As seen in</span>
-          <img src="/logos/microsoft.svg" alt="Microsoft" className="h-6"/>
-          <img src="/logos/unicef.svg" alt="UNICEF" className="h-6"/>
-          <img src="/logos/google.svg" alt="Google" className="h-6"/>
-        </div>
+import React from "react";
+
+export default function Hero() {
+  return (
+    <section className="relative w-full h-[95vh] overflow-hidden flex items-center justify-center">
+
+      {/* --- Background Video --- */}
+      <video
+        className="absolute top-0 left-0 w-full h-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src="/videos/hero-bg.mp4" type="video/mp4" />
+      </video>
+
+      {/* --- Grey Overlay --- */}
+      <div className="absolute inset-0 bg-black/40"></div>
+
+      {/* --- Content --- */}
+      <div className="relative z-10 text-center px-6 max-w-3xl">
+        
+        {/* Belief statement */}
+        <h2
+          className="text-white text-lg tracking-wide uppercase mb-6"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          I believe in building meaningful products, empowering people, and leading with clarity.
+        </h2>
+
+        {/* Main headline (serif like Marie Forleo) */}
+        <h1
+          className="text-white text-5xl md:text-6xl font-bold leading-[1.15] mb-8"
+          style={{ fontFamily: "var(--font-heading)" }}
+        >
+          Creating Impact Through Innovation, Leadership & Vision
+        </h1>
+
+        {/* Button */}
+        <a
+          href="#services"
+          className="inline-block bg-white text-black px-8 py-4 text-sm font-medium tracking-wide uppercase shadow-md hover:bg-gray-100 transition"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          Explore My Work
+        </a>
       </div>
     </section>
-  )
+  );
 }

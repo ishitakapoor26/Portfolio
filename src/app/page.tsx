@@ -1,41 +1,35 @@
 import Hero from '@/components/Hero'
-import SectionHeading from '@/components/SectionHeading'
-import ServicesPreview from '@/components/ServicesPreview'
-import ProjectsPreview from '@/components/ProjectsPreview'
+import About from '@/app/about/page'
+import WorkExperience from '@/components/WorkExperience'
+import {workExperience} from '@/data/workExp'
+import {successStories} from '@/data/success'
+import {projects} from '@/data/projects'
+import {blogs} from '@/data/blog'
+import {services} from '@/data/services'
+import {events} from '@/data/events'
+import {testimonials} from '@/data/testimonials'
+import {mediaGallery} from '@/data/media'
+import SuccessStories from './success/page'
+import Projects from '@/components/ProjectsPreview'
+import Services from './services/page'
+import Events from './events/page'
+import Testimonials from '@/components/Testimonial'
+import Media from './media/page'
+import BlogSection from './articles/page'
 
 export default function Home(){
   return (
     <div>
       <Hero />
-
-      <section className="py-12 bg-white">
-        <div className="container">
-          <SectionHeading title="About" />
-          <p className="max-w-3xl">Ishita Kapoor is an emerging global leader, innovator, and award-winning technologist recognized for creating high-impact solutions in accessibility, education, and technology. She combines leadership, strategy and entrepreneurship to drive change — winner of Microsoft Imagine Cup (Education category) and NIDHI EIR grant awardee.</p>
-        </div>
-      </section>
-
-      <section className="py-12 bg-gray-50">
-        <div className="container">
-          <SectionHeading title="Services" />
-          <ServicesPreview />
-        </div>
-      </section>
-
-      <section className="py-12 bg-white">
-        <div className="container">
-          <SectionHeading title="Projects & Case Studies" />
-          <ProjectsPreview />
-        </div>
-      </section>
-
-      <section className="py-12 bg-gray-50">
-        <div className="container">
-          <SectionHeading title="Articles & Publications" />
-          <p className="max-w-3xl">Featured research and long-form articles on accessible STEM education, leadership, and inclusive tech — each article uses MDX for rich content and SEO.</p>
-        </div>
-      </section>
-
+      <About/>
+      <WorkExperience data={workExperience}/>
+      <SuccessStories data={successStories}/>
+      <Projects data={projects}/>
+      <Events data={events}/>
+      <Services data={services}/>
+      <Testimonials data={testimonials}/>
+      <BlogSection data={blogs}/>
+      {/* <Media/> */}
     </div>
   )
 }

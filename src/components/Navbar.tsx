@@ -11,7 +11,7 @@ export default function Navbar() {
     { label: "Projects", href: "/projects" },
     { label: "Success Stories", href: "/media" },
     { label: "Services", href: "/events" },
-    { label: "Blog", href: "/events" },
+    { label: "Blog", href: "/blogs" },
   ];
 
   const ctaButtons = [
