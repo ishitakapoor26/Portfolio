@@ -3,33 +3,35 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import ParticleBackground from "./ParticleBackground"; // import your particle component
 
 /* ----------- TUNABLE CONSTANTS ----------- */
 const VISIBLE_COUNT = 3;
-const CARD_HEIGHT = 260;
-const CARD_GAP = 20;
+const CARD_HEIGHT = 260; // larger card height
+const CARD_GAP = 16; // bigger spacing
 const SLOT_SIZE = CARD_HEIGHT + CARD_GAP;
 
-const SENSITIVITY = 0.0009;
-const FRICTION = 0.90;
-const SNAP_EASE = 0.18;
-const BUFFER = 1;
-const DOT_SIZE = 12;
+const SENSITIVITY = 0.0009; // wheel sensitivity (reduced)
+const FRICTION = 0.90; // friction per frame
+const SNAP_EASE = 0.18; // lerp factor when snapping
+const BUFFER = 1; // render buffer above/below visible window
+const DOT_SIZE = 0; // timeline dot size
 
 export default function WorkExperienceRoller({ data = [] }) {
   if (!data || data.length === 0) return null;
 
   const n = data.length;
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(0); // fractional index offset (top-most)
   const velRef = useRef(0);
   const rafRef = useRef<number | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [isPointerOver, setIsPointerOver] = useState(false);
+
   const [modalItem, setModalItem] = useState(null);
 
+  // RAF loop - applies velocity + friction + snap easing when near zero
   useEffect(() => {
     const step = () => {
+      // apply velocity
       if (Math.abs(velRef.current) > 1e-6) {
         setOffset((prev) => prev + velRef.current);
         velRef.current *= FRICTION;
@@ -37,6 +39,7 @@ export default function WorkExperienceRoller({ data = [] }) {
         velRef.current = 0;
       }
 
+      // When velocity is near zero, gently lerp offset towards nearest integer (snap)
       if (Math.abs(velRef.current) < 1e-4) {
         setOffset((prev) => {
           const snapped = Math.round(prev);
@@ -54,6 +57,7 @@ export default function WorkExperienceRoller({ data = [] }) {
     };
   }, []);
 
+  // wheel handler only while pointer over viewport
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
@@ -64,7 +68,10 @@ export default function WorkExperienceRoller({ data = [] }) {
     const onWheel = (e: WheelEvent) => {
       if (!isPointerOver) return;
       e.preventDefault();
-      velRef.current += e.deltaY * SENSITIVITY;
+      // transform deltaY into offset units
+      // smaller sensitivity so single scroll doesn't jump many cards
+      const deltaIdx = e.deltaY * SENSITIVITY;
+      velRef.current += deltaIdx;
     };
 
     el.addEventListener("pointerenter", onEnter);
@@ -78,44 +85,55 @@ export default function WorkExperienceRoller({ data = [] }) {
     };
   }, [isPointerOver]);
 
+  // helpers
   const mod = (i) => {
     const m = i % n;
     return m < 0 ? m + n : m;
   };
 
+  // programmatic arrow controls (move one item)
   const moveBy = (delta) => {
-    velRef.current = 0;
+    velRef.current = 0; // kill momentum so arrow is precise
     setOffset((prev) => prev + delta);
   };
 
+  // render range
   const startFloat = offset;
   const renderCount = VISIBLE_COUNT + BUFFER * 2;
-  const viewportHeight = (VISIBLE_COUNT * SLOT_SIZE - CARD_GAP) * 0.7;
+
+  // compute viewport height for left timeline markers
+  const viewportHeight = (VISIBLE_COUNT * SLOT_SIZE - CARD_GAP)*0.7;
 
   return (
-    <section className="relative py-20 px-4 md:px-16 bg-[#F7F3EE] overflow-hidden">
-      {/* PARTICLE BACKGROUND */}
-      <ParticleBackground count={50} />
-
-      {/* CONTENT */}
-      <div className="relative z-10 max-w-6xl mx-auto">
-        <h2
-          className="text-5xl md:text-5xl font-bold mb-10"
-          style={{ fontFamily: '"Cormorant Garamond", serif' }}
-        >
+    <section className="py-20 px-6 md:px-20 bg-[#F7F3EE]" style={{
+    backgroundImage: `
+      linear-gradient(rgba(247,243,238,0.7), rgba(247,243,238,0.7)),
+      url('/bg-texture.jpg')
+    `,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+  }}>
+      <div className="max-w-6xl mx-auto relative">
+        <h2 className="text-4xl md:text-5xl font-bold mb-10" style={{ fontFamily: '"Cormorant Garamond", serif'  }}>
           The Roles That Built Me....
         </h2>
 
         <div className="relative grid grid-cols-1 md:grid-cols-[72px_1fr] gap-6 items-start">
-          {/* Timeline and roller code remains unchanged */}
+          {/* LEFT: timeline column with fixed vertical line + markers aligned to slots */}
           <div className="hidden md:block relative">
+            {/* vertical line */}
             <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[3px] bg-[#E8DED3] rounded-full" />
+            {/* markers for VISIBLE_COUNT slots */}
             <div
               className="absolute left-1/2 -translate-x-1/2 top-0"
-              style={{ height: `${viewportHeight}px`, width: 0 }}
+              style={{
+                height: `${viewportHeight}px`,
+                width: 0,
+              }}
             >
               {Array.from({ length: VISIBLE_COUNT }).map((_, i) => {
-                const topPx = i * SLOT_SIZE + CARD_HEIGHT / 2;
+                const topPx = i * SLOT_SIZE + (CARD_HEIGHT / 2);
                 return (
                   <div
                     key={i}
@@ -130,17 +148,21 @@ export default function WorkExperienceRoller({ data = [] }) {
                       border: "2px solid #F7F3EE",
                       boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
                     }}
+                    aria-hidden
                   />
                 );
               })}
             </div>
           </div>
 
+          {/* RIGHT: roller viewport */}
           <div>
             <div
               ref={viewportRef}
               className="relative mx-auto overflow-hidden"
-              style={{ height: `${viewportHeight}px` }}
+              style={{
+                height: `${viewportHeight}px`,
+              }}
             >
               <div style={{ position: "absolute", inset: 0 }}>
                 {Array.from({ length: renderCount }).map((_, i) => {
@@ -148,20 +170,29 @@ export default function WorkExperienceRoller({ data = [] }) {
                   const wrappedIndex = mod(virtualIndex);
                   const item = data[wrappedIndex];
 
+                  // vertical position of the slot relative to top of viewport
                   const y = (virtualIndex - startFloat) * SLOT_SIZE;
-                  const centerSlot = (VISIBLE_COUNT - 1) / 2;
+
+                  // center math
+                  const centerSlot = (VISIBLE_COUNT - 1) / 2; // e.g., for 3 -> 1
                   const distanceToCenter = Math.abs((virtualIndex - startFloat) - centerSlot + 0.5);
+
                   const isCenter = distanceToCenter < 0.6;
 
                   const scale = isCenter ? 1.03 : Math.max(0.86, 1 - distanceToCenter * 0.12);
-                  const blur = isCenter ? 0 : Math.min(4, distanceToCenter * 2);
+                  const blur = isCenter ? 0 : Math.min(10, distanceToCenter * 5);
                   const opacity = Math.max(0.25, isCenter ? 1 : 1 - distanceToCenter * 0.35);
 
                   return (
                     <motion.div
                       key={`slot-${i}-${wrappedIndex}`}
                       initial={false}
-                      animate={{ y, scale, opacity, filter: `blur(${blur}px)` }}
+                      animate={{
+                        y,
+                        scale,
+                        opacity,
+                        filter: `blur(${blur}px)`,
+                      }}
                       transition={{ type: "spring", stiffness: 160, damping: 24 }}
                       style={{
                         position: "absolute",
@@ -172,22 +203,26 @@ export default function WorkExperienceRoller({ data = [] }) {
                         boxSizing: "border-box",
                       }}
                     >
-                      <Card item={item} isCenter={isCenter} onOpen={() => setModalItem(item)} />
+                      <Card
+                        item={item}
+                        isCenter={isCenter}
+                        onOpen={() => setModalItem(item)}
+                      />
                     </motion.div>
                   );
                 })}
               </div>
             </div>
 
-            <div className="mt-4 text-xs text-gray-600">
-              Scroll inside to browse experiences — click to view details
-            </div>
+            <div className="mt-4 text-xs text-gray-600">Scroll inside to browse experiences — click to view details</div>
 
+            {/* ARROW BUTTONS bottom-right */}
             <div className="absolute right-0 -bottom-14 flex gap-3">
               <button
                 onClick={() => moveBy(-1)}
                 className="w-12 h-12 flex items-center justify-center rounded-full border bg-white shadow-md hover:shadow-lg transition"
                 style={{ borderColor: "#E8DED3", color: "#C1AFA0" }}
+                aria-label="Previous"
               >
                 <ChevronLeft className="w-6 h-6" />
               </button>
@@ -196,6 +231,7 @@ export default function WorkExperienceRoller({ data = [] }) {
                 onClick={() => moveBy(1)}
                 className="w-12 h-12 flex items-center justify-center rounded-full border bg-white shadow-md hover:shadow-lg transition"
                 style={{ borderColor: "#E8DED3", color: "#C1AFA0" }}
+                aria-label="Next"
               >
                 <ChevronRight className="w-6 h-6" />
               </button>
@@ -204,6 +240,7 @@ export default function WorkExperienceRoller({ data = [] }) {
         </div>
       </div>
 
+      {/* MODAL */}
       <AnimatePresence>
         {modalItem && (
           <motion.div
@@ -220,10 +257,7 @@ export default function WorkExperienceRoller({ data = [] }) {
               transition={{ duration: 0.22 }}
               className="relative bg-white rounded-2xl shadow-xl max-w-3xl w-full mx-4 p-8"
             >
-              <button
-                onClick={() => setModalItem(null)}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100"
-              >
+              <button onClick={() => setModalItem(null)} className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100">
                 <X className="w-5 h-5" />
               </button>
 
@@ -267,7 +301,9 @@ function Card({ item, isCenter, onOpen }) {
           ${isCenter ? "bg-white scale-[1.01] shadow-[0_10px_40px_rgba(0,0,0,0.08)]" : "bg-white/85"}
           border
         `}
-        style={{ borderColor: "#E9E0D6" }}
+        style={{
+          borderColor: "#E9E0D6",
+        }}
       >
         <h4 className="text-xl md:text-2xl font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
           {item.title}
@@ -277,7 +313,7 @@ function Card({ item, isCenter, onOpen }) {
         </p>
 
         <p className="text-gray-700 text-sm mt-4 line-clamp-3" style={{ fontFamily: "var(--font-body)" }}>
-          {item.description.split("•").map((s) => s.trim()).filter(Boolean)[0] || ""}
+          {item.description.split("•").map(s => s.trim()).filter(Boolean)[0] || ""}
         </p>
 
         <div className="mt-4 flex items-center justify-between">
