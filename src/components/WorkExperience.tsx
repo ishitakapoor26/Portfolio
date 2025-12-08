@@ -1,159 +1,290 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
-import { motion, useAnimation, useInView, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp } from "lucide-react";
 
-interface WorkItem {
-  title: string;
-  company: string;
-  duration: string;
-  description: string;
-}
+import React, { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import ParticleBackground from "./ParticleBackground"; // import your particle component
 
-interface WorkExperienceProps {
-  data: WorkItem[];
-}
+/* ----------- TUNABLE CONSTANTS ----------- */
+const VISIBLE_COUNT = 3;
+const CARD_HEIGHT = 260;
+const CARD_GAP = 20;
+const SLOT_SIZE = CARD_HEIGHT + CARD_GAP;
 
-export default function WorkExperience({ data }: WorkExperienceProps) {
+const SENSITIVITY = 0.0009;
+const FRICTION = 0.90;
+const SNAP_EASE = 0.18;
+const BUFFER = 1;
+const DOT_SIZE = 12;
+
+export default function WorkExperienceRoller({ data = [] }) {
+  if (!data || data.length === 0) return null;
+
+  const n = data.length;
+  const [offset, setOffset] = useState(0);
+  const velRef = useRef(0);
+  const rafRef = useRef<number | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const [isPointerOver, setIsPointerOver] = useState(false);
+  const [modalItem, setModalItem] = useState(null);
+
+  useEffect(() => {
+    const step = () => {
+      if (Math.abs(velRef.current) > 1e-6) {
+        setOffset((prev) => prev + velRef.current);
+        velRef.current *= FRICTION;
+      } else {
+        velRef.current = 0;
+      }
+
+      if (Math.abs(velRef.current) < 1e-4) {
+        setOffset((prev) => {
+          const snapped = Math.round(prev);
+          if (Math.abs(snapped - prev) < 0.0001) return prev;
+          return prev + (snapped - prev) * SNAP_EASE;
+        });
+      }
+
+      rafRef.current = requestAnimationFrame(step);
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const onEnter = () => setIsPointerOver(true);
+    const onLeave = () => setIsPointerOver(false);
+
+    const onWheel = (e: WheelEvent) => {
+      if (!isPointerOver) return;
+      e.preventDefault();
+      velRef.current += e.deltaY * SENSITIVITY;
+    };
+
+    el.addEventListener("pointerenter", onEnter);
+    el.addEventListener("pointerleave", onLeave);
+    el.addEventListener("wheel", onWheel, { passive: false });
+
+    return () => {
+      el.removeEventListener("pointerenter", onEnter);
+      el.removeEventListener("pointerleave", onLeave);
+      el.removeEventListener("wheel", onWheel as EventListener);
+    };
+  }, [isPointerOver]);
+
+  const mod = (i) => {
+    const m = i % n;
+    return m < 0 ? m + n : m;
+  };
+
+  const moveBy = (delta) => {
+    velRef.current = 0;
+    setOffset((prev) => prev + delta);
+  };
+
+  const startFloat = offset;
+  const renderCount = VISIBLE_COUNT + BUFFER * 2;
+  const viewportHeight = (VISIBLE_COUNT * SLOT_SIZE - CARD_GAP) * 0.7;
+
   return (
-    <section className="py-24 px-4 md:px-20 bg-white relative">
-      <h2 className="text-3xl md:text-4xl font-bold mb-20">Work Experience</h2>
+    <section className="relative py-20 px-4 md:px-16 bg-[#F7F3EE] overflow-hidden">
+      {/* PARTICLE BACKGROUND */}
+      <ParticleBackground count={50} />
 
-      <div className="relative">
+      {/* CONTENT */}
+      <div className="relative z-10 max-w-6xl mx-auto">
+        <h2
+          className="text-5xl md:text-5xl font-bold mb-10"
+          style={{ fontFamily: '"Cormorant Garamond", serif' }}
+        >
+          The Roles That Built Me....
+        </h2>
 
-        {/* Vertical Line */}
-        <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[3px]
-          bg-gradient-to-b from-gray-300 via-gray-200 to-gray-300
-          h-full rounded-full z-0" />
+        <div className="relative grid grid-cols-1 md:grid-cols-[72px_1fr] gap-6 items-start">
+          {/* Timeline and roller code remains unchanged */}
+          <div className="hidden md:block relative">
+            <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[3px] bg-[#E8DED3] rounded-full" />
+            <div
+              className="absolute left-1/2 -translate-x-1/2 top-0"
+              style={{ height: `${viewportHeight}px`, width: 0 }}
+            >
+              {Array.from({ length: VISIBLE_COUNT }).map((_, i) => {
+                const topPx = i * SLOT_SIZE + CARD_HEIGHT / 2;
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      position: "absolute",
+                      left: `-${DOT_SIZE / 2}px`,
+                      top: `${topPx - DOT_SIZE / 2}px`,
+                      width: DOT_SIZE,
+                      height: DOT_SIZE,
+                      borderRadius: DOT_SIZE,
+                      background: "#fff",
+                      border: "2px solid #F7F3EE",
+                      boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
 
-        <div className="flex flex-col gap-32">
-          {data.map((job, idx) => (
-            <TimelineItem key={idx} job={job} idx={idx} />
-          ))}
+          <div>
+            <div
+              ref={viewportRef}
+              className="relative mx-auto overflow-hidden"
+              style={{ height: `${viewportHeight}px` }}
+            >
+              <div style={{ position: "absolute", inset: 0 }}>
+                {Array.from({ length: renderCount }).map((_, i) => {
+                  const virtualIndex = Math.floor(startFloat) - BUFFER + i;
+                  const wrappedIndex = mod(virtualIndex);
+                  const item = data[wrappedIndex];
+
+                  const y = (virtualIndex - startFloat) * SLOT_SIZE;
+                  const centerSlot = (VISIBLE_COUNT - 1) / 2;
+                  const distanceToCenter = Math.abs((virtualIndex - startFloat) - centerSlot + 0.5);
+                  const isCenter = distanceToCenter < 0.6;
+
+                  const scale = isCenter ? 1.03 : Math.max(0.86, 1 - distanceToCenter * 0.12);
+                  const blur = isCenter ? 0 : Math.min(4, distanceToCenter * 2);
+                  const opacity = Math.max(0.25, isCenter ? 1 : 1 - distanceToCenter * 0.35);
+
+                  return (
+                    <motion.div
+                      key={`slot-${i}-${wrappedIndex}`}
+                      initial={false}
+                      animate={{ y, scale, opacity, filter: `blur(${blur}px)` }}
+                      transition={{ type: "spring", stiffness: 160, damping: 24 }}
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        width: "100%",
+                        height: `${CARD_HEIGHT}px`,
+                        padding: `${CARD_GAP / 2}px 0`,
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      <Card item={item} isCenter={isCenter} onOpen={() => setModalItem(item)} />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-4 text-xs text-gray-600">
+              Scroll inside to browse experiences — click to view details
+            </div>
+
+            <div className="absolute right-0 -bottom-14 flex gap-3">
+              <button
+                onClick={() => moveBy(-1)}
+                className="w-12 h-12 flex items-center justify-center rounded-full border bg-white shadow-md hover:shadow-lg transition"
+                style={{ borderColor: "#E8DED3", color: "#C1AFA0" }}
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              <button
+                onClick={() => moveBy(1)}
+                className="w-12 h-12 flex items-center justify-center rounded-full border bg-white shadow-md hover:shadow-lg transition"
+                style={{ borderColor: "#E8DED3", color: "#C1AFA0" }}
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {modalItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center"
+          >
+            <div className="absolute inset-0 bg-black/50" onClick={() => setModalItem(null)} />
+            <motion.div
+              initial={{ scale: 0.98, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.98, y: 20 }}
+              transition={{ duration: 0.22 }}
+              className="relative bg-white rounded-2xl shadow-xl max-w-3xl w-full mx-4 p-8"
+            >
+              <button
+                onClick={() => setModalItem(null)}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <h3 className="text-2xl font-semibold mb-1" style={{ fontFamily: "var(--font-heading)" }}>
+                {modalItem.title}
+              </h3>
+              <p className="text-sm text-gray-600 mb-4" style={{ fontFamily: "var(--font-body)" }}>
+                {modalItem.company} • {modalItem.duration}
+              </p>
+
+              <div className="space-y-3 text-gray-800" style={{ fontFamily: "var(--font-body)" }}>
+                {modalItem.description.split("•").map((s, i) => {
+                  const t = s.trim();
+                  if (!t) return null;
+                  return (
+                    <div key={i} className="flex gap-3">
+                      <div className="text-lg">•</div>
+                      <div>{t}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
 
-/* -----------------------------------------------------
-   TIMELINE ITEM
------------------------------------------------------ */
-function TimelineItem({ job, idx }) {
-  const isLeft = idx % 2 === 0;
-
-  const ref = useRef(null);
-  const inView = useInView(ref, { amount: 0.3 });
-  const controls = useAnimation();
-
-  useEffect(() => {
-    controls.start(inView ? "visible" : "hidden");
-  }, [inView]);
-
+/* ---------------- Card ---------------- */
+function Card({ item, isCenter, onOpen }) {
   return (
-    <div ref={ref} className="relative w-full min-h-[120px]">
+    <div className="px-3 md:px-6">
+      <div
+        onClick={onOpen}
+        role="button"
+        tabIndex={0}
+        className={`
+          rounded-3xl p-6 md:p-8 cursor-pointer transition-all duration-200
+          ${isCenter ? "bg-white scale-[1.01] shadow-[0_10px_40px_rgba(0,0,0,0.08)]" : "bg-white/85"}
+          border
+        `}
+        style={{ borderColor: "#E9E0D6" }}
+      >
+        <h4 className="text-xl md:text-2xl font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
+          {item.title}
+        </h4>
+        <p className="text-gray-600 text-sm mt-2" style={{ fontFamily: "var(--font-body)" }}>
+          {item.company} • {item.duration}
+        </p>
 
-      {/* Dot */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-        <motion.div
-          animate={controls}
-          variants={{
-            hidden: { scale: 0.3, opacity: 0 },
-            visible: { scale: 1, opacity: 1 },
-          }}
-          transition={{ duration: 0.5 }}
-          className="relative"
-        >
-          <div
-            style={{ backgroundColor: "lab(52 24.92 44.65)" }}
-            className="w-6 h-6 rounded-full border-2 border-white shadow-xl"
-          />
-          <div
-            style={{ backgroundColor: "lab(52 24.92 44.65 / 0.35)" }}
-            className="w-14 h-14 absolute -top-4 -left-4 rounded-full blur-2xl opacity-80"
-          />
-        </motion.div>
-      </div>
+        <p className="text-gray-700 text-sm mt-4 line-clamp-3" style={{ fontFamily: "var(--font-body)" }}>
+          {item.description.split("•").map((s) => s.trim()).filter(Boolean)[0] || ""}
+        </p>
 
-      <div className="md:grid md:grid-cols-2">
-        {/* LEFT CARD */}
-        <div className={`hidden md:flex ${isLeft ? "justify-end pr-14" : ""}`}>
-          {isLeft && <TimelineCard job={job} controls={controls} isLeft={isLeft} />}
-        </div>
-
-        {/* RIGHT CARD */}
-        <div className={`hidden md:flex ${!isLeft ? "justify-start pl-14" : ""}`}>
-          {!isLeft && <TimelineCard job={job} controls={controls} isLeft={isLeft} />}
-        </div>
-
-        {/* MOBILE */}
-        <div className="md:hidden mt-16">
-          <TimelineCard job={job} controls={controls} isLeft={isLeft} />
+        <div className="mt-4 flex items-center justify-between">
+          <div className="text-xs px-3 py-1 rounded-full bg-[#E8DED3] text-sm">Active</div>
+          <div className="text-xs text-gray-500">Click to expand</div>
         </div>
       </div>
     </div>
-  );
-}
-
-/* -----------------------------------------------------
-   CARD COMPONENT — EXPANDABLE + GLASS + MOTION
------------------------------------------------------ */
-function TimelineCard({ job, controls, isLeft }) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, x: isLeft ? -70 : 70, y: 30, filter: "blur(8px)" },
-        visible: { opacity: 1, x: 0, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
-      }}
-      animate={controls}
-      initial="hidden"
-      className="
-        backdrop-blur-xl bg-white/40 
-        border border-white/60 shadow-lg
-        rounded-3xl p-8 
-        w-full max-w-xl cursor-pointer
-        transition-all duration-300
-        hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)]
-        hover:bg-white/60
-      "
-      style={{ borderLeft: "6px solid lab(52 24.92 44.65)" }}
-      onClick={() => setExpanded(!expanded)}
-    >
-      {/* Header */}
-      <div className="flex justify-between items-start">
-        <div>
-          <h3 className="text-xl font-semibold">{job.title}</h3>
-          <p className="text-sm text-gray-600 mt-1">
-            {job.company} • {job.duration}
-          </p>
-        </div>
-
-        <motion.div
-          animate={{ rotate: expanded ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <ChevronDown className="w-6 h-6 text-gray-600" />
-        </motion.div>
-      </div>
-
-      {/* EXPANDING CONTENT */}
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0, y: -10 }}
-            animate={{ opacity: 1, height: "auto", y: 0 }}
-            exit={{ opacity: 0, height: 0, y: -10 }}
-            transition={{ duration: 0.35 }}
-            className="overflow-hidden"
-          >
-            <p className="text-gray-700 mt-5 leading-relaxed whitespace-pre-line">
-              {job.description}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
   );
 }
