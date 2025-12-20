@@ -1,33 +1,66 @@
 "use client";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import "../../styles/SuccessStories.css";
 
 export default function SuccessStories({ data }) {
+  const [active, setActive] = useState(data[0]);
+
   return (
-    <section className="py-16 px-4 md:px-16 bg-gray-50">
-      <h2 className="text-3xl font-bold mb-10">Success Stories</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {data.map((story, idx) => (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: idx * 0.1 }}
-            className="relative rounded-lg overflow-hidden cursor-pointer group"
-          >
-            <img
-              src={story.image}
-              alt={story.title}
-              className="w-full h-64 object-cover transition-transform group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-center p-4">
-              <div className="text-white">
-                <h3 className="text-xl font-semibold">{story.title}</h3>
-                <p className="mt-2">{story.description}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+    <section className="success-section">
+      {/* VIDEO BACKDROP */}
+      <div className="success-video-wrapper">
+        <video
+          className="success-video"
+          src="/videos/hero-loop.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+        <div className="video-gradient" />
+      </div>
+
+      {/* CARD LAYER */}
+      <div className="success-cards">
+        {/* LEFT CARD */}
+        <div className="success-left">
+          <div className="success-summary">
+            <span className="summary-number">35+</span>
+            <span className="summary-text">
+              Global recognitions across technology, research, and impact
+            </span>
+          </div>
+
+          {/* SCROLLABLE LIST */}
+          <div className="success-list">
+            {data.map((item) => (
+              <button
+                key={item.id}
+                className={`success-item ${
+                  active.id === item.id ? "active" : ""
+                }`}
+                onClick={() => setActive(item)}
+              >
+                <div className="item-label">{item.title}</div>
+                <div className="item-meta">
+                  {item.issuer} · {item.date || item.year}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <button className="explore-cta">
+            Explore all stories →
+          </button>
+        </div>
+
+        {/* RIGHT CARD */}
+        <div className="success-right">
+          <span className="right-eyebrow">{active.issuer}</span>
+          <h3 className="right-headline">{active.title}</h3>
+          <p className="right-description">{active.description}</p>
+        </div>
       </div>
     </section>
   );

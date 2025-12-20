@@ -1,8 +1,9 @@
+"use client";
 import Hero from '@/components/Hero'
 import About from '@/app/about/page'
 import WorkExperience from '@/components/WorkExperience'
 import {workExperience} from '@/data/workExp'
-import {successStories} from '@/data/success'
+import {successData} from '@/data/success'
 import {projects} from '@/data/projects'
 import {blogs} from '@/data/blog'
 import {services} from '@/data/services'
@@ -23,7 +24,7 @@ export default function Home(){
       <Hero />
       <About/>
       <WorkExperience data={workExperience}/>
-      <SuccessStories data={successStories}/>
+      <SuccessStories data={successData}/>
       <Projects data={projects}/>
       <Events data={events}/>
       <Services data={services}/>

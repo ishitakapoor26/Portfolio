@@ -1,4 +1,4 @@
-export const successStories = [
+export const successData = [
   {
     id: 1,
     title: "Winner at Nasscom for Startups — SprintX 2.0",

@@ -1,0 +1,199 @@
+/* =========================
+   SUCCESS STORIES SECTION
+   ========================= */
+
+.success-section {
+  position: relative;
+  min-height: 120vh;
+  background: #f7f4ef;
+  overflow: hidden;
+}
+
+/* =========================
+   VIDEO BACKDROP
+   ========================= */
+
+.success-video-wrapper {
+  position: relative;
+  height: 80vh;
+  width: 100%;
+}
+
+.success-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-gradient {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(
+    to top,
+    #f7f4ef 30%,
+    rgba(247, 244, 239, 0.6) 55%,
+    transparent
+  );
+}
+
+/* =========================
+   CARD CONTAINER
+   ========================= */
+
+.success-cards {
+  position: relative;
+  max-width: 1200px;
+  margin: -160px auto 0;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 40px;
+  padding: 40px;
+  align-items: stretch;
+  margin-bottom: 4rem;
+}
+
+/* =========================
+   LEFT CARD
+   ========================= */
+
+.success-left {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+
+  max-height: 520px;
+}
+
+/* Summary */
+
+.success-summary {
+  margin-bottom: 20px;
+}
+
+.summary-number {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.summary-text {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+  color: #777;
+}
+
+/* Scrollable list */
+
+.success-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  max-height: 300px;
+  overflow-y: auto;
+
+  padding-right: 6px;
+}
+
+/* Subtle scrollbar */
+
+.success-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.success-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+}
+
+/* Items */
+
+.success-item {
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.success-item:hover {
+  background: #f2eee8;
+}
+
+.success-item.active {
+  background: #efe9e0;
+}
+
+.item-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.item-meta {
+  font-size: 13px;
+  margin-top: 2px;
+  color: #777;
+}
+
+/* CTA */
+
+.explore-cta {
+  margin-top: auto;
+  padding-top: 18px;
+
+  background: none;
+  border: none;
+  text-align: left;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #a68b6a;
+  cursor: pointer;
+
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.explore-cta:hover {
+  opacity: 1;
+}
+
+/* =========================
+   RIGHT CARD
+   ========================= */
+
+.success-right {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 48px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
+}
+
+/* Content */
+
+.right-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.right-headline {
+  font-size: 32px;
+  margin: 12px 0 20px;
+}
+
+.right-description {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #444;
+}
