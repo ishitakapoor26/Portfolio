@@ -1,0 +1,142 @@
+/* =========================
+   FOOTER — MARIE FORLEO STYLE
+   ========================= */
+
+.footer-root {
+  background: #1e1e1e;
+  color: #fff;
+  padding: 96px 24px 0;
+  font-family: inherit;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 64px;
+}
+
+/* BRAND COLUMN */
+
+.footer-logo {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.footer-subtext {
+  font-size: 14px;
+  color: #cfcfcf;
+  line-height: 1.6;
+  margin-bottom: 28px;
+  max-width: 360px;
+}
+
+.footer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 320px;
+}
+
+.footer-form input {
+  padding: 12px 14px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+}
+
+.footer-form button {
+  margin-top: 6px;
+  padding: 12px;
+  background: #e3c7c5;
+  color: #000;
+  font-weight: 600;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+}
+
+.footer-privacy {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 14px;
+  max-width: 320px;
+}
+
+/* LINK COLUMNS */
+
+.footer-col h4 {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col li {
+  margin-bottom: 12px;
+}
+
+.footer-col a {
+  font-size: 14px;
+  color: #cfcfcf;
+  text-decoration: none;
+}
+
+.footer-col a:hover {
+  color: #fff;
+}
+
+/* BOTTOM BAR */
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin-top: 72px;
+  padding: 24px 0;
+}
+
+.footer-bottom-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.footer-legal {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-legal a {
+  color: #aaa;
+  text-decoration: none;
+}
+
+.footer-legal a:hover {
+  color: #fff;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .footer-bottom-inner {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}

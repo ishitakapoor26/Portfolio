@@ -1,0 +1,110 @@
+/* =========================
+   LEAD MAGNET — MARIE STYLE
+   ========================= */
+
+.lead-root {
+  background: #f6f1e8;
+  padding: 120px 24px;
+}
+
+.lead-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 80px;
+}
+
+/* CONTENT */
+
+.lead-title {
+  font-size: 44px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  line-height: 1.25;
+}
+
+.lead-title em {
+  font-style: italic;
+}
+
+.lead-subtitle {
+  font-size: 17px;
+  color: #444;
+  line-height: 1.6;
+  max-width: 520px;
+  margin-bottom: 36px;
+}
+
+/* FORM */
+
+.lead-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 560px;
+}
+
+.lead-form input {
+  padding: 14px 16px;
+  font-size: 14px;
+  border: 1px solid #000;
+  background: #fff;
+}
+
+.lead-form button {
+  grid-column: span 2;
+  margin-top: 8px;
+  padding: 16px;
+  border-radius: 999px;
+  border: none;
+  background: #eef2a3;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lead-form button:hover {
+  background: #e6eb8f;
+}
+
+/* DISCLAIMER */
+
+.lead-disclaimer {
+  margin-top: 16px;
+  font-size: 11px;
+  color: #777;
+  max-width: 520px;
+}
+
+.lead-disclaimer a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* VISUAL */
+
+.lead-visual {
+  display: flex;
+  justify-content: center;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .lead-inner {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    text-align: center;
+  }
+
+  .lead-form {
+    grid-template-columns: 1fr;
+  }
+
+  .lead-form button {
+    grid-column: auto;
+  }
+}

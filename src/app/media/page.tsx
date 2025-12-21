@@ -1,26 +1,56 @@
 "use client";
 
-import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import "@/styles/Media.css";
 
-export default function Media({ images }) {
+interface MediaItem {
+  id: number;
+  type: "image" | "video";
+  src: string;
+  caption: string;
+  link?: string; // OPTIONAL
+}
+
+export default function MediaSection({ data }: { data: MediaItem[] }) {
+  if (!data?.length) return null;
+
   return (
-    <section className="py-24 px-6 md:px-20 bg-white">
-      <h2 className="text-3xl md:text-4xl font-bold mb-16">Media</h2>
+    <section className="media-section">
+      <div className="media-inner">
+        <span className="media-eyebrow">Media & Features</span>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        {images.map((img, i) => (
-          <motion.div
-            key={i}
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden rounded-2xl shadow-md"
-          >
-            <img
-              src={img}
-              className="w-full h-72 object-cover hover:scale-110 transition-all duration-500"
-            />
-          </motion.div>
-        ))}
+        <div className="media-grid">
+          {data.map((item) => {
+            const Content = (
+              <>
+                <Image
+                  src={item.src}
+                  alt={item.caption}
+                  fill
+                  className="media-img"
+                />
+                <div className="media-overlay">
+                  <span>{item.caption}</span>
+                </div>
+              </>
+            );
+
+            return item.link ? (
+              <Link
+                href={item.link}
+                key={item.id}
+                className="media-tile"
+              >
+                {Content}
+              </Link>
+            ) : (
+              <div key={item.id} className="media-tile">
+                {Content}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

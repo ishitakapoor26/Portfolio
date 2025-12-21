@@ -1,0 +1,85 @@
+/* =========================
+   MEDIA SECTION
+   ========================= */
+
+.media-section {
+  background: #f7f4ef;
+  padding: 120px 24px;
+}
+
+.media-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Soft label */
+.media-eyebrow {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9b8f82;
+  margin-bottom: 48px;
+}
+
+/* Grid */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.media-tile {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.12);
+}
+
+.media-img {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.media-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.1)
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.media-overlay span {
+  color: white;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.media-tile:hover .media-overlay {
+  opacity: 1;
+}
+
+.media-tile:hover .media-img {
+  transform: scale(1.04);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .media-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .media-grid {
+    grid-template-columns: 1fr;
+  }
+}
