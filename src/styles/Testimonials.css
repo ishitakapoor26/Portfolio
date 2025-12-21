@@ -1,0 +1,124 @@
+/* =========================
+   TESTIMONIALS — REFINED
+   ========================= */
+
+.voices-section {
+  background: #f7f4ef;
+  padding: 120px 0;
+  overflow: hidden;
+}
+
+.voices-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Title */
+.voices-title {
+  font-size: 42px;
+  font-weight: 500;
+  margin-bottom: 48px;
+  letter-spacing: -0.01em;
+}
+
+/* Track wrapper */
+.voices-track-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient fade on edges (VERY important for polish) */
+.voices-track-wrapper::before,
+.voices-track-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 120px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.voices-track-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #f7f4ef 30%, transparent);
+}
+
+.voices-track-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #f7f4ef 30%, transparent);
+}
+
+/* Track */
+.voices-track {
+  display: flex;
+  gap: 48px;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Individual quote */
+.voice-item {
+  min-width: 420px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  padding: 32px 36px;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+}
+
+/* Quote text */
+.voice-quote {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #2c2c2c;
+  margin-bottom: 24px;
+}
+
+/* Meta */
+.voice-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.voice-img {
+  border-radius: 50%;
+  filter: grayscale(100%);
+  opacity: 0.85;
+}
+
+.voice-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.voice-role {
+  display: block;
+  font-size: 13px;
+  color: #777;
+}
+
+/* Hover effect — VERY subtle */
+.voice-item:hover {
+  transform: translateY(-2px);
+  transition: transform 0.25s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .voices-title {
+    font-size: 34px;
+  }
+
+  .voice-item {
+    min-width: 320px;
+    padding: 28px;
+  }
+
+  .voice-quote {
+    font-size: 16px;
+  }
+}

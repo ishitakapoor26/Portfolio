@@ -12,12 +12,13 @@ import {testimonials} from '@/data/testimonials'
 import {mediaGallery} from '@/data/media'
 import SuccessStories from './success/page'
 import Projects from '@/app/projects/page'
-import Events from './events/page'
+import Events from './latest/page'
 import Testimonials from '@/components/Testimonial'
 import Media from './media/page'
-import BlogSection from './articles/page'
 import HonoredBy from '@/components/HonoredBy';
 import {honoredBy} from '@/data/honoredby';
+import {latestItems} from "@/data/latest";
+import LatestSection from './latest/page';
 import ServicesContact from './services/page';
 
 export default function Home(){
@@ -30,9 +31,8 @@ export default function Home(){
       <SuccessStories data={successData}/>
       <ServicesContact services={services}/>
       <Projects projects={projects}/>
-      <Events data={events}/>
+      <LatestSection data={latestItems}/>
       <Testimonials data={testimonials}/>
-      <BlogSection data={blogs}/>
       {/* <Media/> */}
     </div>
   )

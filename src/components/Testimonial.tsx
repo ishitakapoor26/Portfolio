@@ -1,34 +1,80 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import Image from "next/image";
+import "@/styles/Testimonials.css";
 
-export default function Testimonials({ data }) {
+interface Voice {
+  name: string;
+  role: string;
+  quote: string;
+  image: string;
+}
+
+export default function Testimonials({ data }: { data: Voice[] }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let animationId: number;
+    let start = 0;
+
+    const animate = () => {
+      start -= 0.3; // speed
+      track.style.transform = `translateX(${start}px)`;
+
+      if (Math.abs(start) > track.scrollWidth / 2) {
+        start = 0;
+      }
+
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animationId = requestAnimationFrame(animate);
+
+    const stop = () => cancelAnimationFrame(animationId);
+    const resume = () => requestAnimationFrame(animate);
+
+    track.addEventListener("mouseenter", stop);
+    track.addEventListener("mouseleave", resume);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      track.removeEventListener("mouseenter", stop);
+      track.removeEventListener("mouseleave", resume);
+    };
+  }, []);
+
   return (
-    <section className="py-24 px-6 md:px-20 bg-white">
-      <h2 className="text-3xl md:text-4xl font-bold mb-14">
-        What People Say
-      </h2>
+    <section className="voices-section">
+      <div className="voices-inner">
+        <h2 className="voices-title">In Their Words</h2>
 
-      <div className="flex overflow-x-auto gap-8 no-scrollbar pb-8">
-        {data.map((t, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="
-              bg-white/40 backdrop-blur-xl border
-              border-white/40 shadow-md
-              p-8 rounded-3xl min-w-[350px]
-            "
-          >
-            <p className="text-gray-700 leading-relaxed">“{t.quote}”</p>
+        <div className="voices-track-wrapper">
+          <div className="voices-track" ref={trackRef}>
+            {[...data, ...data].map((voice, i) => (
+              <div className="voice-item" key={i}>
+                <p className="voice-quote">“{voice.quote}”</p>
 
-            <div className="mt-4 font-semibold">{t.name}</div>
-            <div className="text-sm text-gray-500">{t.role}</div>
-          </motion.div>
-        ))}
+                <div className="voice-meta">
+                  <Image
+                    src={voice.image}
+                    alt={voice.name}
+                    width={36}
+                    height={36}
+                    className="voice-img"
+                  />
+                  <div>
+                    <span className="voice-name">{voice.name}</span>
+                    <span className="voice-role">{voice.role}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
