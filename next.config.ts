@@ -7,11 +7,16 @@ const withMDX = createMDX({
 
 // Your actual Next.js config
 const nextConfig: NextConfig = {
-  // add future config options here
+  experimental: {
+    appDir: true,
+  },
+  webpack(config) {
+    config.ignoreWarnings = [
+      { message: /sourceMapURL could not be parsed/ },
+    ];
+    return config;
+  },
 };
 
-// Wrap it with MDX, and export only **one** default
-export default withMDX({
-  ...nextConfig,
-  pageExtensions: ["ts", "tsx", "md", "mdx"],
-});
+// Wrap with MDX and export
+export default withMDX(nextConfig);
