@@ -11,23 +11,26 @@ import {events} from '@/data/events'
 import {testimonials} from '@/data/testimonials'
 import {mediaGallery} from '@/data/media'
 import SuccessStories from './success/page'
-import Projects from '@/components/ProjectsPreview'
-import Services from './services/page'
+import Projects from '@/app/projects/page'
 import Events from './events/page'
 import Testimonials from '@/components/Testimonial'
 import Media from './media/page'
 import BlogSection from './articles/page'
+import HonoredBy from '@/components/HonoredBy';
+import {honoredBy} from '@/data/honoredby';
+import ServicesContact from './services/page';
 
 export default function Home(){
   return (
     <div>
       <Hero />
       <About/>
+      <HonoredBy data ={honoredBy}/>
       <WorkExperience data={workExperience}/>
       <SuccessStories data={successData}/>
-      <Projects data={projects}/>
+      <ServicesContact services={services}/>
+      <Projects projects={projects}/>
       <Events data={events}/>
-      <Services data={services}/>
       <Testimonials data={testimonials}/>
       <BlogSection data={blogs}/>
       {/* <Media/> */}

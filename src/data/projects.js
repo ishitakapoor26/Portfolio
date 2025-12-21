@@ -11,4 +11,40 @@ export const projects = [
     image: "/images/project2.jpg",
     link: "/projects/hear-it-through",
   },
+  {
+    title: "Hear-It-Through App",
+    description: "Speech-to-ISL translation app bridging communication gap.",
+    image: "/images/project2.jpg",
+    link: "/projects/hear-it-through",
+  },
+  {
+    title: "Hear-It-Through App",
+    description: "Speech-to-ISL translation app bridging communication gap.",
+    image: "/images/project2.jpg",
+    link: "/projects/hear-it-through",
+  },
+  {
+    title: "Hear-It-Through App",
+    description: "Speech-to-ISL translation app bridging communication gap.",
+    image: "/images/project2.jpg",
+    link: "/projects/hear-it-through",
+  },
+  {
+    title: "Hear-It-Through App",
+    description: "Speech-to-ISL translation app bridging communication gap.",
+    image: "/images/project2.jpg",
+    link: "/projects/hear-it-through",
+  },
+  {
+    title: "Hear-It-Through App",
+    description: "Speech-to-ISL translation app bridging communication gap.",
+    image: "/images/project2.jpg",
+    link: "/projects/hear-it-through",
+  },
+  {
+    title: "Hear-It-Through App",
+    description: "Speech-to-ISL translation app bridging communication gap.",
+    image: "/images/project2.jpg",
+    link: "/projects/hear-it-through",
+  },
 ];

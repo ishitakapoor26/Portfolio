@@ -1,41 +1,88 @@
 "use client";
-import { motion } from "framer-motion";
 
-export default function Services({ data }) {
+import { useState } from "react";
+import "@/styles/Services.css"
+
+interface Service {
+  id: number;
+  title: string;
+  shortDescription: string;
+  longDescription: string;
+  icon: string;
+}
+
+interface Props {
+  services?: Service[];
+}
+
+export default function ServicesContact({ services = [] }: Props) {
+  const [selectedService, setSelectedService] = useState(
+    services[0]?.title || ""
+  );
+
+  if (!services.length) {
+    return null; // prevents runtime crash
+  }
+
   return (
-    <section className="py-24 px-6 md:px-20 bg-white">
-      <h2 className="text-3xl md:text-4xl font-bold mb-16">Services</h2>
+    <section className="services-contact-section">
+      <div className="services-contact-inner">
+        {/* LEFT */}
+        <div className="services-list">
+          <span className="services-eyebrow">How I can help</span>
 
-      <div className="grid md:grid-cols-3 gap-10">
-        {data.map((srv, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="
-              p-8 rounded-3xl 
-              bg-white/40 backdrop-blur-xl
-              border border-white/60
-              shadow-md hover:shadow-xl
-              transition-all duration-300
-              hover:-translate-y-2
-            "
-          >
+          {services.map((service) => (
             <div
-              className="text-4xl mb-4"
-              style={{ color: "lab(52 24.92 44.65)" }}
+              key={service.id}
+              className="service-card"
+              onClick={() => setSelectedService(service.title)}
             >
-              {srv.icon}
+              <h3>{service.title}</h3>
+              <p>{service.shortDescription}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* RIGHT */}
+        <div className="contact-form-card">
+          <h3>Start a conversation</h3>
+          <p className="form-subtext">
+            Share a bit about what you’re looking for and I’ll get back to you.
+          </p>
+
+          <form className="contact-form">
+            <div className="form-group">
+              <label>Name</label>
+              <input type="text" required />
             </div>
 
-            <h3 className="text-xl font-semibold">{srv.title}</h3>
-            <p className="mt-3 text-gray-700 leading-relaxed">
-              {srv.description}
-            </p>
-          </motion.div>
-        ))}
+            <div className="form-group">
+              <label>Email</label>
+              <input type="email" required />
+            </div>
+
+            <div className="form-group">
+              <label>Service</label>
+              <select
+                value={selectedService}
+                onChange={(e) => setSelectedService(e.target.value)}
+              >
+                {services.map((service) => (
+                  <option key={service.id} value={service.title}>
+                    {service.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Message</label>
+              <textarea rows={4} />
+            </div>
+
+            <button className="form-submit">Submit inquiry</button>
+          </form>
+        </div>
       </div>
     </section>
   );

@@ -1,0 +1,66 @@
+/* =========================
+   HONORED BY (Marie-style)
+   ========================= */
+
+.honored-section {
+  padding: 80px 24px;
+  background: #272727;
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+
+.honored-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Soft eyebrow (not a title) */
+.honored-eyebrow {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9b8f82;
+  margin-bottom: 28px;
+}
+
+/* Logos row */
+.honored-logos {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  flex-wrap: wrap;
+}
+
+/* Individual logo container */
+.logo-wrap {
+  opacity: 0.75;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.logo-wrap:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+/* Logo image */
+.logo-img {
+  object-fit: contain;
+  filter: grayscale(100%);
+  transition: filter 0.25s ease;
+}
+
+.logo-wrap:hover .logo-img {
+  filter: grayscale(0%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .honored-logos {
+    gap: 32px;
+  }
+
+  .logo-img {
+    width: 110px;
+    height: auto;
+  }
+}

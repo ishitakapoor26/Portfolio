@@ -1,0 +1,196 @@
+/* =========================
+   PROJECTS — MARIE STYLE (FIXED)
+   ========================= */
+
+.project-root {
+  background: #ffe2dc;
+}
+
+/* ---------- HERO VIDEO ---------- */
+
+.project-hero {
+  position: relative;
+  height: 85vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.project-hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- FEATURED PROJECT ---------- */
+
+.project-featured-wrapper {
+  position: relative;
+  max-width: 1200px;
+  margin: -15rem auto 0;
+  padding: 0 24px 140px;
+}
+
+/* CONTENT CARD */
+.project-featured-card {
+  position: relative;
+  background: #ffffff;
+  padding: 72px 72px 72px 420px; /* space for mockup */
+  border-radius: 32px;
+  box-shadow: 0 50px 120px rgba(0,0,0,0.15);
+  max-width: 100%;
+}
+
+/* MOCKUP — OVERLAPPING */
+.project-mockup {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320px;
+  height: 640px;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 60px 120px rgba(0,0,0,0.25);
+  z-index: 2;
+}
+
+.project-mockup-img {
+  object-fit: cover;
+}
+
+/* TEXT */
+.project-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9b8f82;
+}
+
+.project-title {
+  font-size: 42px;
+  margin: 24px 0;
+}
+
+.project-description {
+  font-size: 18px;
+  line-height: 1.75;
+  color: #444;
+}
+
+.project-link {
+  display: inline-block;
+  margin-top: 32px;
+  font-weight: 500;
+  color: #000;
+}
+
+/* ---------- OTHER PROJECTS (FIXED GREY) ---------- */
+
+.project-other {
+  background: rgb(6 6 6 / 89%); /* REAL grey */
+  padding: 40px 0 32px;
+}
+
+.project-other-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.project-other-eyebrow {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+  margin-bottom: 32px;
+}
+
+.project-other-row {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+}
+
+.project-mini {
+  min-width: 220px; /* smaller */
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease;
+  scroll-snap-align: start;
+}
+
+.project-mini-img {
+  position: relative;
+  height: 120px; /* reduced */
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.project-mini h4 {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.project-mini p {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.project-other-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.project-arrows {
+  display: flex;
+  gap: 10px;
+}
+
+.project-arrows button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.2s ease;
+}
+
+.project-arrows button:hover {
+  background: #e5e5e5;
+}
+
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 900px) {
+  .project-featured-card {
+    padding: 48px;
+  }
+
+  .project-mockup {
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: none;
+    margin: 0 auto 32px;
+    width: 260px;
+    height: 520px;
+  }
+
+  .project-title {
+    font-size: 34px;
+  }
+}
